@@ -1,0 +1,1536 @@
+BEGIN HEADER
+   CharacterSet "CP1252"
+   ExportingTool "IBM InfoSphere DataStage Export"
+   ToolVersion "8"
+   ServerName "VRISDEV02.CHEC.LOCAL"
+   ToolInstanceID "ORIGINATIONS_DEV"
+   MDISVersion "1.0"
+   Date "2016-12-14"
+   Time "16.08.46"
+   ServerVersion "9.1"
+END HEADER
+BEGIN DSJOB
+   Identifier "LOAD_LSAMS_DCSN_NEINBD00W"
+   DateModified "2016-12-14"
+   TimeModified "04.26.57"
+   BEGIN DSRECORD
+      Identifier "ROOT"
+      OLEType "CJobDefn"
+      Readonly "0"
+      Name "LOAD_LSAMS_DCSN_NEINBD00W"
+      Description "Extract data for LSAMS"
+      NextID "2"
+      Container "V0"
+      FullDescription "Job extracts data for LSAMS from CUST_ACCT_PH_NBR_DCSN"
+      JobVersion "56.0.0"
+      ControlAfterSubr "0"
+      Parameters "CParameters"
+      BEGIN DSSUBRECORD
+         Name "NEUSTAR_PARAM"
+         Prompt "NEUSTAR_PARAM parameters"
+         Default "(As pre-defined)"
+         ParamType "13"
+         ParamLength "0"
+         ParamScale "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "AdvancedRuntimeOptions"
+         Value "#DSProjectARTOptions#"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceMode"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceSeq"
+         Value "1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceRecords"
+         Value "100"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TraceSkip"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "TracePeriod"
+         Value "1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RecordJobPerformanceData"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "IdentList"
+         Value "ODBC_LSAMS_DCSN|CPY_LSAMS_DSCN|ODBC_LSAMS_NEINBD00W"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "ClientCodePage"
+         Value "1252"
+      END DSSUBRECORD
+      NULLIndicatorPosition "0"
+      OrchestrateCode =+=+=+=
+#################################################################
+#### STAGE: ODBC_LSAMS_DCSN
+## Operator
+pxbridge
+## Operator options
+-Orientation link
+-XMLProperties '<?xml version=\\'1.0\\' encoding=\\'UTF-16\\'?><Properties version=\\'1.1\\'><Common><Context type=\\'int\\'>1</Context><Variant type=\\'string\\'>3.5</Variant><DescriptorVersion type=\\'string\\'>1.0</DescriptorVersion><PartitionType type=\\'int\\'>-1</PartitionType><RCP type=\\'int\\'>0</RCP></Common><Connection><DataSource modified=\\'1\\' type=\\'string\\'><![CDATA[[&"NEUSTAR_PARAM.$NEUSTAR_SQL_SERVER"]]]></DataSource><Username modified=\\'1\\' type=\\'string\\'><![CDATA[[&"NEUSTAR_PARAM.$NEUSTAR_SQL_USER"]]]></Username><Password modified=\\'1\\' type=\\'string\\'><![CDATA[[&"NEUSTAR_PARAM.$NEUSTAR_SQL_PWD"]]]></Password></Connection><Usage><GenerateSQL modified=\\'1\\' type=\\'bool\\'><![CDATA[0]]></GenerateSQL><EnableQuotedIDs type=\\'bool\\'><![CDATA[0]]></EnableQuotedIDs><SQL><SelectStatement modified=\\'1\\' type=\\'string\\'><![CDATA[SELECT
+	 CAST(CUST_ACCT_PH_TYPE_ID AS BIGINT) AS PHONE_TYPE_ID
+	,CAST(BAT_EXEC_KEY_ID AS BIGINT) AS BATCH_KEY_ID
+	,CAST(LTRIM(RTRIM(ACCT_NBR)) AS VARCHAR(16)) AS ACCT_NBR
+	,CAST(BORR_PSTN_NBR AS INTEGER) AS BORROWER_POSITION_NUMBER
+	,CAST(LTRIM(RTRIM(PH_TYPE_CD)) AS VARCHAR(32)) AS PHONE_TYPE
+	,CAST(LTRIM(RTRIM(PH_NBR_RAW_FRMT)) AS VARCHAR(32)) AS PHONE_NUMBER_RAW
+	,CAST(LTRIM(RTRIM(DCSN_MBL_PH_IND)) AS VARCHAR(1)) AS MOBILE_PH_IND
+	,CAST(LTRIM(RTRIM(DCSN_AUTH_TO_CNTCT)) AS VARCHAR(8)) AS AUTHORIZED_TO_CONTACT
+	,CASE WHEN CAST(LTRIM(RTRIM(DCSN)) AS VARCHAR(32))=\\'D-INVLD_PH_NBR\\' THEN \\'D\\' ELSE DCSN END AS DECISION
+FROM
+	[&"NEUSTAR_PARAM.$NEUSTAR_SQL_DB"].XFER.CUST_ACCT_PH_NBR_DCSN
+WHERE
+	UPPER(LTRIM(RTRIM(DCSN))) IN (\\'D\\',\\'U\\',\\'D-INVLD_PH_NBR\\')
+	AND DCSN_ACTN_STS IS NULL AND DCSN_ACTN_DTTM IS NULL
+;]]><ReadStatementFromFile type=\\'bool\\'><![CDATA[0]]></ReadStatementFromFile><Tables collapsed=\\'1\\'></Tables><Parameters collapsed=\\'1\\'></Parameters><Columns collapsed=\\'1\\'></Columns></SelectStatement><EnablePartitioning collapsed=\\'1\\' type=\\'bool\\'><![CDATA[0]]></EnablePartitioning></SQL><Transaction><RecordCount type=\\'int\\'><![CDATA[2000]]></RecordCount><EndOfWave collapsed=\\'1\\' type=\\'int\\'><![CDATA[0]]></EndOfWave></Transaction><Session><IsolationLevel type=\\'int\\'><![CDATA[1]]></IsolationLevel><AutocommitMode type=\\'int\\'><![CDATA[0]]></AutocommitMode><ArraySize type=\\'int\\'><![CDATA[2000]]></ArraySize><SchemaReconciliation><FailOnSizeMismatch modified=\\'1\\' type=\\'bool\\'><![CDATA[0]]></FailOnSizeMismatch><FailOnTypeMismatch modified=\\'1\\' type=\\'bool\\'><![CDATA[0]]></FailOnTypeMismatch><FailOnCodePageMismatch type=\\'bool\\'><![CDATA[0]]></FailOnCodePageMismatch></SchemaReconciliation><PassLobLocator collapsed=\\'1\\' type=\\'bool\\'><![CDATA[0]]></PassLobLocator><CodePage collapsed=\\'1\\' type=\\'int\\'><![CDATA[0]]></CodePage></Session><BeforeAfter collapsed=\\'1\\' type=\\'bool\\'><![CDATA[0]]></BeforeAfter><LimitRows collapsed=\\'1\\' type=\\'bool\\'><![CDATA[0]]></LimitRows></Usage></Properties >'
+-connector '{
+   variant=\\'3.5\\', 
+   library=ccodbc, 
+   version=1.0, 
+   variantlist=\\'V1;3.5::ccodbc\\', 
+   versionlist=\\'1.0\\', 
+   name=ODBCConnector
+}'
+-source 0 '{
+      DSSQLType={PHONE_TYPE_ID=-5, BATCH_KEY_ID=-5, ACCT_NBR=12, BORROWER_POSITION_NUMBER=4, PHONE_TYPE=12, PHONE_NUMBER_RAW=12, MOBILE_PH_IND=12, AUTHORIZED_TO_CONTACT=12, DECISION=12}, 
+      DSSQLPrecision={PHONE_TYPE_ID=10, BATCH_KEY_ID=32, ACCT_NBR=16, PHONE_TYPE=32, PHONE_NUMBER_RAW=32, MOBILE_PH_IND=1, AUTHORIZED_TO_CONTACT=8, DECISION=32}, 
+      DSSchema=\\'record
+         (
+           PHONE_TYPE_ID\\:int64\\;
+           BATCH_KEY_ID\\:int64\\;
+           ACCT_NBR\\:string\\[max\\=16\\]\\;
+           BORROWER_POSITION_NUMBER\\:nullable int32\\;
+           PHONE_TYPE\\:nullable string\\[max\\=32\\]\\;
+           PHONE_NUMBER_RAW\\:nullable string\\[max\\=32\\]\\;
+           MOBILE_PH_IND\\:nullable string\\[max\\=1\\]\\;
+           AUTHORIZED_TO_CONTACT\\:nullable string\\[max\\=8\\]\\;
+           DECISION\\:nullable string\\[max\\=32\\]\\;
+         )\\'
+}'
+   
+
+## General options
+[ident('ODBC_LSAMS_DCSN'); jobmon_ident('ODBC_LSAMS_DCSN')]
+## Outputs
+0> [modify (
+  PHONE_TYPE_ID:not_nullable int64=PHONE_TYPE_ID;
+  BATCH_KEY_ID:not_nullable int64=BATCH_KEY_ID;
+  ACCT_NBR:not_nullable string[max=16]=ACCT_NBR;
+  BORROWER_POSITION_NUMBER:nullable int32=BORROWER_POSITION_NUMBER;
+  PHONE_TYPE:nullable string[max=32]=PHONE_TYPE;
+  PHONE_NUMBER_RAW:nullable string[max=32]=PHONE_NUMBER_RAW;
+  MOBILE_PH_IND:nullable string[max=1]=MOBILE_PH_IND;
+  AUTHORIZED_TO_CONTACT:nullable string[max=8]=AUTHORIZED_TO_CONTACT;
+  DECISION:nullable string[max=32]=DECISION;
+keep
+  PHONE_TYPE_ID,BATCH_KEY_ID,ACCT_NBR,BORROWER_POSITION_NUMBER,
+  PHONE_TYPE,PHONE_NUMBER_RAW,MOBILE_PH_IND,AUTHORIZED_TO_CONTACT,
+  DECISION;
+)] 'ODBC_LSAMS_DCSN:lnk_out_lsams_dscn.v'
+;
+
+#################################################################
+#### STAGE: CPY_LSAMS_DSCN
+## Operator
+copy
+## General options
+[ident('CPY_LSAMS_DSCN'); jobmon_ident('CPY_LSAMS_DSCN')]
+## Inputs
+0< [] 'ODBC_LSAMS_DCSN:lnk_out_lsams_dscn.v'
+## Outputs
+0> [modify (
+keep
+  PHONE_TYPE_ID,BATCH_KEY_ID,ACCT_NBR,BORROWER_POSITION_NUMBER,
+  PHONE_TYPE,PHONE_NUMBER_RAW,MOBILE_PH_IND,AUTHORIZED_TO_CONTACT,
+  DECISION;
+)] 'CPY_LSAMS_DSCN:lnk_lsams_dscn_extrct.v'
+;
+
+#################################################################
+#### STAGE: ODBC_LSAMS_NEINBD00W
+## Operator
+pxbridge
+## Operator options
+-Orientation link
+-XMLProperties '<?xml version=\\'1.0\\' encoding=\\'UTF-16\\'?><Properties version=\\'1.1\\'><Common><Context type=\\'int\\'>2</Context><Variant type=\\'string\\'>3.5</Variant><DescriptorVersion type=\\'string\\'>1.0</DescriptorVersion><PartitionType type=\\'int\\'>-1</PartitionType><RCP type=\\'int\\'>0</RCP></Common><Connection><DataSource modified=\\'1\\' type=\\'string\\'><![CDATA[[&"NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_SERVER"]]]></DataSource><Username modified=\\'1\\' type=\\'string\\'><![CDATA[[&"NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_USER"]]]></Username><Password modified=\\'1\\' type=\\'string\\'><![CDATA[[&"NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_PWD"]]]></Password></Connection><Usage><WriteMode modified=\\'1\\' type=\\'int\\'><![CDATA[0]]></WriteMode><GenerateSQL modified=\\'1\\' type=\\'bool\\'><![CDATA[0]]></GenerateSQL><EnableQuotedIDs type=\\'bool\\'><![CDATA[0]]></EnableQuotedIDs><SQL><InsertStatement collapsed=\\'1\\' modified=\\'1\\' type=\\'string\\'><![CDATA[INSERT INTO 
+[&"NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_INDB"].NEINBD00W
+(
+PHONE_TYPE_ID
+,BATCH_KEY_ID
+,ACCT_NBR
+,BORROWER_POSITION_NUMBER
+,PHONE_TYPE
+,PHONE_NUMBER_RAW
+,MOBILE_PH_IND
+,AUTHORIZED_TO_CONTACT
+,DECISION
+,DECISION_ACT_STS
+,DECISION_ACT_DTTM
+) 
+VALUES
+(
+ORCHESTRATE.PHONE_TYPE_ID
+,ORCHESTRATE.BATCH_KEY_ID
+,ORCHESTRATE.ACCT_NBR
+,ORCHESTRATE.BORROWER_POSITION_NUMBER
+,ORCHESTRATE.PHONE_TYPE
+,ORCHESTRATE.PHONE_NUMBER_RAW
+,ORCHESTRATE.MOBILE_PH_IND
+,ORCHESTRATE.AUTHORIZED_TO_CONTACT
+,ORCHESTRATE.DECISION
+,\\'\\'
+,\\'\\'
+)]]><Tables collapsed=\\'1\\'><Table type=\\'string\\'><![CDATA[[&"NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_INDB"].NEINBD00W]]></Table></Tables><Parameters collapsed=\\'1\\'><Parameter type=\\'string\\'><![CDATA[PHONE_TYPE_ID,PHONE_TYPE_ID,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[BATCH_KEY_ID,BATCH_KEY_ID,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[ACCT_NBR,ACCT_NBR,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[BORROWER_POSITION_NUMBER,BORROWER_POSITION_NUMBER,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[PHONE_TYPE,PHONE_TYPE,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[PHONE_NUMBER_RAW,PHONE_NUMBER_RAW,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[MOBILE_PH_IND,MOBILE_PH_IND,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[AUTHORIZED_TO_CONTACT,AUTHORIZED_TO_CONTACT,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[DECISION,DECISION,NEINBD00W]]></Parameter></Parameters></InsertStatement></SQL><TableAction collapsed=\\'1\\' type=\\'int\\'><![CDATA[0]]></TableAction><Transaction><RecordCount modified=\\'1\\' type=\\'int\\'><![CDATA[0]]></RecordCount></Transaction><Session><IsolationLevel type=\\'int\\'><![CDATA[1]]></IsolationLevel><AutocommitMode type=\\'int\\'><![CDATA[0]]></AutocommitMode><ArraySize type=\\'int\\'><![CDATA[2000]]></ArraySize><SchemaReconciliation><FailOnSizeMismatch modified=\\'1\\' type=\\'bool\\'><![CDATA[0]]></FailOnSizeMismatch><FailOnTypeMismatch modified=\\'1\\' type=\\'bool\\'><![CDATA[0]]></FailOnTypeMismatch><FailOnCodePageMismatch type=\\'bool\\'><![CDATA[0]]></FailOnCodePageMismatch><DropUnmatchedFields type=\\'bool\\'><![CDATA[1]]></DropUnmatchedFields></SchemaReconciliation><CodePage collapsed=\\'1\\' type=\\'int\\'><![CDATA[0]]></CodePage><FailOnRowErrorPX type=\\'bool\\'><![CDATA[1]]></FailOnRowErrorPX></Session><Logging><LogColumnValues collapsed=\\'1\\' type=\\'bool\\'><![CDATA[0]]></LogColumnValues></Logging><BeforeAfter collapsed=\\'1\\' type=\\'bool\\'><![CDATA[0]]></BeforeAfter></Usage></Properties >'
+-connector '{
+   variant=\\'3.5\\', 
+   library=ccodbc, 
+   version=1.0, 
+   variantlist=\\'V1;3.5::ccodbc\\', 
+   versionlist=\\'1.0\\', 
+   name=ODBCConnector
+}'
+-target 0 '{
+      DSSQLType={PHONE_TYPE_ID=-5, BATCH_KEY_ID=-5, ACCT_NBR=12, BORROWER_POSITION_NUMBER=4, PHONE_TYPE=12, PHONE_NUMBER_RAW=12, MOBILE_PH_IND=12, AUTHORIZED_TO_CONTACT=12, DECISION=12}, 
+      DSDerivation={PHONE_TYPE_ID=\\'lnk_out_lsams_dscn\\.PHONE_TYPE_ID\\', BATCH_KEY_ID=\\'lnk_out_lsams_dscn\\.BATCH_KEY_ID\\', ACCT_NBR=\\'lnk_out_lsams_dscn\\.ACCT_NBR\\', BORROWER_POSITION_NUMBER=\\'lnk_out_lsams_dscn\\.BORROWER_POSITION_NUMBER\\', PHONE_TYPE=\\'lnk_out_lsams_dscn\\.PHONE_TYPE\\', PHONE_NUMBER_RAW=\\'lnk_out_lsams_dscn\\.PHONE_NUMBER_RAW\\', MOBILE_PH_IND=\\'lnk_out_lsams_dscn\\.MOBILE_PH_IND\\', AUTHORIZED_TO_CONTACT=\\'lnk_out_lsams_dscn\\.AUTHORIZED_TO_CONTACT\\', DECISION=\\'lnk_out_lsams_dscn\\.DECISION\\'}, 
+      DSSQLPrecision={PHONE_TYPE_ID=10, BATCH_KEY_ID=32, ACCT_NBR=16, PHONE_TYPE=32, PHONE_NUMBER_RAW=32, MOBILE_PH_IND=1, AUTHORIZED_TO_CONTACT=8, DECISION=32}, 
+      DSSchema=\\'record
+         (
+           PHONE_TYPE_ID\\:int64\\;
+           BATCH_KEY_ID\\:int64\\;
+           ACCT_NBR\\:string\\[max\\=16\\]\\;
+           BORROWER_POSITION_NUMBER\\:nullable int32\\;
+           PHONE_TYPE\\:nullable string\\[max\\=32\\]\\;
+           PHONE_NUMBER_RAW\\:nullable string\\[max\\=32\\]\\;
+           MOBILE_PH_IND\\:nullable string\\[max\\=1\\]\\;
+           AUTHORIZED_TO_CONTACT\\:nullable string\\[max\\=8\\]\\;
+           DECISION\\:nullable string\\[max\\=32\\]\\;
+         )\\'
+}'
+   
+
+## General options
+[ident('ODBC_LSAMS_NEINBD00W'); jobmon_ident('ODBC_LSAMS_NEINBD00W')]
+## Inputs
+0< [] 'CPY_LSAMS_DSCN:lnk_lsams_dscn_extrct.v'
+;
+
+
+=+=+=+=
+      IsTemplate "0"
+      NLSLocale ",,,,"
+      JobType "3"
+      Category "\\Jobs\\NEUSTAR\\INBOUND"
+      CenturyBreakYear "30"
+      NextAliasID "2"
+      ParameterFileDDName "DD00001"
+      ReservedWordCheck "1"
+      TransactionSize "0"
+      ValidationStatus "0"
+      Uploadable "0"
+      PgmCustomizationFlag "0"
+      JobReportFlag "0"
+      AllowMultipleInvocations "0"
+      Act2ActOverideDefaults "0"
+      Act2ActEnableRowBuffer "0"
+      Act2ActUseIPC "0"
+      Act2ActBufferSize "0"
+      Act2ActIPCTimeout "0"
+      ExpressionSemanticCheckFlag "0"
+      TraceOption "0"
+      EnableCacheSharing "0"
+      RuntimeColumnPropagation "0"
+      RelStagesInJobStatus "-1"
+      WebServiceEnabled "0"
+      MFProcessMetaData "0"
+      MFProcessMetaDataXMLFileExchangeMethod "0"
+      IMSProgType "0"
+      CopyLibPrefix "ARDT"
+      RecordPerformanceResults "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0"
+      OLEType "CContainerView"
+      Readonly "0"
+      Name "Job"
+      NextID "1"
+      IsTopLevel "0"
+      StageList "V0S0|V0S37|V0A38|V0S40"
+      StageXPos "144|384|192|624"
+      StageYPos "336|336|204|336"
+      StageTypes "CCustomStage.CC_GUI|CCustomStage|ID_PALETTEANNOTATION|CCustomStage.CC_GUI"
+      NextStageID "41"
+      SnapToGrid "1"
+      GridLines "0"
+      ZoomValue "100"
+      StageXSize "48|48|428|48"
+      StageYSize "48|48|43|48"
+      ContainerViewSizing "0000 0000 1147 0611 0000 0001 0000 0120"
+      StageNames "ODBC_LSAMS_DCSN|CPY_LSAMS_DSCN| |ODBC_LSAMS_NEINBD00W"
+      StageTypeIDs "ODBCConnectorPX|PxCopy| |ODBCConnectorPX"
+      LinkNames "lnk_out_lsams_dscn|lnk_lsams_dscn_extrct| | "
+      LinkHasMetaDatas "True|True| | "
+      LinkTypes "1|1| | "
+      LinkNamePositionXs "224|476| | "
+      LinkNamePositionYs "360|360| | "
+      TargetStageIDs "V0S37|V0S40| | "
+      SourceStageEffectiveExecutionModes "2|2| | "
+      SourceStageRuntimeExecutionModes "2|2| | "
+      TargetStageEffectiveExecutionModes "2|2| | "
+      TargetStageRuntimeExecutionModes "2|2| | "
+      LinkIsSingleOperatorLookup "False|False| | "
+      LinkIsSortSequential "False|False| | "
+      LinkSortMode "0|0| | "
+      LinkPartColMode "1|1| | "
+      LinkSourcePinIDs "V0S0P1|V0S37P2| | "
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0A38"
+      OLEType "CAnnotation"
+      Readonly "0"
+      Name "V0A38"
+      NextID "0"
+      AnnotationType "0"
+      AnnotationText "Extracts data from 'CUST_ACCT_PH_NBR_DCSN' to load LSAMS table NEINBD00W"
+      TextFont "Microsoft Sans Serif\\10\\0\\0\\0\\700\\0"
+      TextHorizontalJustification "1"
+      TextVerticalJustification "1"
+      TextColor "0"
+      BackgroundColor "12713983"
+      BackgroundTransparent "0"
+      BorderVisible "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "ODBC_LSAMS_DCSN"
+      NextID "2"
+      OutputPins "V0S0P1"
+      StageType "ODBCConnectorPX"
+      AllowColumnMapping "0"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "VariantName"
+         Value "3.5"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "VariantLibrary"
+         Value "ccodbc"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "VariantVersion"
+         Value "1.0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "SupportedVariants"
+         Value "V1;3.5::ccodbc"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "SupportedVariantsLibraries"
+         Value "ccodbc"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "SupportedVariantsVersions"
+         Value "1.0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Orientation"
+         Value "link"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectFromLink"
+         Value "-1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectThreshold"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectNumber"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectUsesPercentage"
+         Value "false"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "ConnectorName"
+         Value "ODBCConnector"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Engine"
+         Value "EE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Context"
+         Value "source"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "ConnectionString"
+         Value "/Connection/DataSource"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Username"
+         Value "/Connection/Username"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Password"
+         Value "/Connection/Password"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XMLProperties"
+         Value =+=+=+=
+<?xml version='1.0' encoding='UTF-16'?><Properties version='1.1'><Common><Context type='int'>1</Context><Variant type='string'>3.5</Variant><DescriptorVersion type='string'>1.0</DescriptorVersion><PartitionType type='int'>-1</PartitionType><RCP type='int'>0</RCP></Common><Connection><DataSource modified='1' type='string'><![CDATA[#NEUSTAR_PARAM.$NEUSTAR_SQL_SERVER#]]></DataSource><Username modified='1' type='string'><![CDATA[#NEUSTAR_PARAM.$NEUSTAR_SQL_USER#]]></Username><Password modified='1' type='string'><![CDATA[#NEUSTAR_PARAM.$NEUSTAR_SQL_PWD#]]></Password></Connection><Usage><GenerateSQL modified='1' type='bool'><![CDATA[0]]></GenerateSQL><EnableQuotedIDs type='bool'><![CDATA[0]]></EnableQuotedIDs><SQL><SelectStatement modified='1' type='string'><![CDATA[SELECT
+	 CAST(CUST_ACCT_PH_TYPE_ID AS BIGINT) AS PHONE_TYPE_ID
+	,CAST(BAT_EXEC_KEY_ID AS BIGINT) AS BATCH_KEY_ID
+	,CAST(LTRIM(RTRIM(ACCT_NBR)) AS VARCHAR(16)) AS ACCT_NBR
+	,CAST(BORR_PSTN_NBR AS INTEGER) AS BORROWER_POSITION_NUMBER
+	,CAST(LTRIM(RTRIM(PH_TYPE_CD)) AS VARCHAR(32)) AS PHONE_TYPE
+	,CAST(LTRIM(RTRIM(PH_NBR_RAW_FRMT)) AS VARCHAR(32)) AS PHONE_NUMBER_RAW
+	,CAST(LTRIM(RTRIM(DCSN_MBL_PH_IND)) AS VARCHAR(1)) AS MOBILE_PH_IND
+	,CAST(LTRIM(RTRIM(DCSN_AUTH_TO_CNTCT)) AS VARCHAR(8)) AS AUTHORIZED_TO_CONTACT
+	,CASE WHEN CAST(LTRIM(RTRIM(DCSN)) AS VARCHAR(32))='D-INVLD_PH_NBR' THEN 'D' ELSE DCSN END AS DECISION
+FROM
+	#NEUSTAR_PARAM.$NEUSTAR_SQL_DB#.XFER.CUST_ACCT_PH_NBR_DCSN
+WHERE
+	UPPER(LTRIM(RTRIM(DCSN))) IN ('D','U','D-INVLD_PH_NBR')
+	AND DCSN_ACTN_STS IS NULL AND DCSN_ACTN_DTTM IS NULL
+;]]><ReadStatementFromFile type='bool'><![CDATA[0]]></ReadStatementFromFile><Tables collapsed='1'></Tables><Parameters collapsed='1'></Parameters><Columns collapsed='1'></Columns></SelectStatement><EnablePartitioning collapsed='1' type='bool'><![CDATA[0]]></EnablePartitioning></SQL><Transaction><RecordCount type='int'><![CDATA[2000]]></RecordCount><EndOfWave collapsed='1' type='int'><![CDATA[0]]></EndOfWave></Transaction><Session><IsolationLevel type='int'><![CDATA[1]]></IsolationLevel><AutocommitMode type='int'><![CDATA[0]]></AutocommitMode><ArraySize type='int'><![CDATA[2000]]></ArraySize><SchemaReconciliation><FailOnSizeMismatch modified='1' type='bool'><![CDATA[0]]></FailOnSizeMismatch><FailOnTypeMismatch modified='1' type='bool'><![CDATA[0]]></FailOnTypeMismatch><FailOnCodePageMismatch type='bool'><![CDATA[0]]></FailOnCodePageMismatch></SchemaReconciliation><PassLobLocator collapsed='1' type='bool'><![CDATA[0]]></PassLobLocator><CodePage collapsed='1' type='int'><![CDATA[0]]></CodePage></Session><BeforeAfter collapsed='1' type='bool'><![CDATA[0]]></BeforeAfter><LimitRows collapsed='1' type='bool'><![CDATA[0]]></LimitRows></Usage></Properties >
+=+=+=+=
+      END DSSUBRECORD
+      NextRecordID "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S0P1"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "lnk_out_lsams_dscn"
+      Partner "V0S37|V0S37P1"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "lookup\\type"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "VariantName"
+         Value "3.5"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "VariantLibrary"
+         Value "ccodbc"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "VariantVersion"
+         Value "1.0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectFromLink"
+         Value "-1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectThreshold"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectNumber"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectUsesPercentage"
+         Value "false"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "ConnectorName"
+         Value "ODBCConnector"
+      END DSSUBRECORD
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "PHONE_TYPE_ID"
+         SqlType "-5"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Group "0"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "BATCH_KEY_ID"
+         SqlType "-5"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Group "0"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "ACCT_NBR"
+         SqlType "12"
+         Precision "16"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Group "0"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "BORROWER_POSITION_NUMBER"
+         SqlType "4"
+         Precision "0"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         Group "0"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PHONE_TYPE"
+         SqlType "12"
+         Precision "32"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         Group "0"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PHONE_NUMBER_RAW"
+         SqlType "12"
+         Precision "32"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         Group "0"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "MOBILE_PH_IND"
+         SqlType "12"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         Group "0"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "AUTHORIZED_TO_CONTACT"
+         SqlType "12"
+         Precision "8"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         Group "0"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "DECISION"
+         SqlType "12"
+         Precision "32"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         Group "0"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "SchemaFormat"
+      END DSSUBRECORD
+      LeftTextPos "224"
+      TopTextPos "360"
+      LinkMinimised "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S37"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "CPY_LSAMS_DSCN"
+      NextID "3"
+      InputPins "V0S37P1"
+      OutputPins "V0S37P2"
+      StageType "PxCopy"
+      AllowColumnMapping "0"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "force"
+         Value " "
+      END DSSUBRECORD
+      NextRecordID "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S37P1"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "lnk_out_lsams_dscn"
+      Partner "V0S0|V0S0P1"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "0"
+      END DSSUBRECORD
+      TransactionSize "0"
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+      LinkMinimised "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S37P2"
+      OLEType "CCustomOutput"
+      Readonly "0"
+      Name "lnk_lsams_dscn_extrct"
+      Partner "V0S40|V0S40P1"
+      Columns "COutputColumn"
+      BEGIN DSSUBRECORD
+         Name "PHONE_TYPE_ID"
+         SqlType "-5"
+         Precision "10"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "lnk_out_lsams_dscn.PHONE_TYPE_ID"
+         Group "0"
+         ParsedDerivation "lnk_out_lsams_dscn.PHONE_TYPE_ID"
+         SourceColumn "lnk_out_lsams_dscn.PHONE_TYPE_ID"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "BATCH_KEY_ID"
+         SqlType "-5"
+         Precision "32"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "lnk_out_lsams_dscn.BATCH_KEY_ID"
+         Group "0"
+         ParsedDerivation "lnk_out_lsams_dscn.BATCH_KEY_ID"
+         SourceColumn "lnk_out_lsams_dscn.BATCH_KEY_ID"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "ACCT_NBR"
+         SqlType "12"
+         Precision "16"
+         Scale "0"
+         Nullable "0"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "lnk_out_lsams_dscn.ACCT_NBR"
+         Group "0"
+         ParsedDerivation "lnk_out_lsams_dscn.ACCT_NBR"
+         SourceColumn "lnk_out_lsams_dscn.ACCT_NBR"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "BORROWER_POSITION_NUMBER"
+         SqlType "4"
+         Precision "0"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "lnk_out_lsams_dscn.BORROWER_POSITION_NUMBER"
+         Group "0"
+         ParsedDerivation "lnk_out_lsams_dscn.BORROWER_POSITION_NUMBER"
+         SourceColumn "lnk_out_lsams_dscn.BORROWER_POSITION_NUMBER"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PHONE_TYPE"
+         SqlType "12"
+         Precision "32"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "lnk_out_lsams_dscn.PHONE_TYPE"
+         Group "0"
+         ParsedDerivation "lnk_out_lsams_dscn.PHONE_TYPE"
+         SourceColumn "lnk_out_lsams_dscn.PHONE_TYPE"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "PHONE_NUMBER_RAW"
+         SqlType "12"
+         Precision "32"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "lnk_out_lsams_dscn.PHONE_NUMBER_RAW"
+         Group "0"
+         ParsedDerivation "lnk_out_lsams_dscn.PHONE_NUMBER_RAW"
+         SourceColumn "lnk_out_lsams_dscn.PHONE_NUMBER_RAW"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "MOBILE_PH_IND"
+         SqlType "12"
+         Precision "1"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "lnk_out_lsams_dscn.MOBILE_PH_IND"
+         Group "0"
+         ParsedDerivation "lnk_out_lsams_dscn.MOBILE_PH_IND"
+         SourceColumn "lnk_out_lsams_dscn.MOBILE_PH_IND"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "AUTHORIZED_TO_CONTACT"
+         SqlType "12"
+         Precision "8"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "lnk_out_lsams_dscn.AUTHORIZED_TO_CONTACT"
+         Group "0"
+         ParsedDerivation "lnk_out_lsams_dscn.AUTHORIZED_TO_CONTACT"
+         SourceColumn "lnk_out_lsams_dscn.AUTHORIZED_TO_CONTACT"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "DECISION"
+         SqlType "12"
+         Precision "32"
+         Scale "0"
+         Nullable "1"
+         KeyPosition "0"
+         DisplaySize "0"
+         Derivation "lnk_out_lsams_dscn.DECISION"
+         Group "0"
+         ParsedDerivation "lnk_out_lsams_dscn.DECISION"
+         SourceColumn "lnk_out_lsams_dscn.DECISION"
+         SortKey "0"
+         SortType "0"
+         AllowCRLF "0"
+         LevelNo "0"
+         Occurs "0"
+         PadNulls "0"
+         SignOption "0"
+         SortingOrder "0"
+         ArrayHandling "0"
+         SyncIndicator "0"
+         PadChar ""
+         ExtendedPrecision "0"
+         TaggedSubrec "0"
+         OccursVarying "0"
+         PKeyIsCaseless "0"
+         SCDPurpose "0"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "DiskWriteInc"
+         Value "1048576"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "BufFreeRun"
+         Value "50"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "MaxMemBufSize"
+         Value "3145728"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "QueueUpperSize"
+         Value "0"
+      END DSSUBRECORD
+      LeftTextPos "476"
+      TopTextPos "360"
+      LinkMinimised "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S40"
+      OLEType "CCustomStage"
+      Readonly "0"
+      Name "ODBC_LSAMS_NEINBD00W"
+      NextID "2"
+      InputPins "V0S40P1"
+      StageType "ODBCConnectorPX"
+      AllowColumnMapping "0"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "VariantName"
+         Value "3.5"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "VariantLibrary"
+         Value "ccodbc"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "VariantVersion"
+         Value "1.0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "SupportedVariants"
+         Value "V1;3.5::ccodbc"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "SupportedVariantsLibraries"
+         Value "ccodbc"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "SupportedVariantsVersions"
+         Value "1.0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Orientation"
+         Value "link"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectFromLink"
+         Value "-1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectThreshold"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectNumber"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectUsesPercentage"
+         Value "false"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "ConnectorName"
+         Value "ODBCConnector"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Engine"
+         Value "EE"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Context"
+         Value "target"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "ConnectionString"
+         Value "/Connection/DataSource"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Username"
+         Value "/Connection/Username"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "Password"
+         Value "/Connection/Password"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "XMLProperties"
+         Value =+=+=+=
+<?xml version='1.0' encoding='UTF-16'?><Properties version='1.1'><Common><Context type='int'>2</Context><Variant type='string'>3.5</Variant><DescriptorVersion type='string'>1.0</DescriptorVersion><PartitionType type='int'>-1</PartitionType><RCP type='int'>0</RCP></Common><Connection><DataSource modified='1' type='string'><![CDATA[#NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_SERVER#]]></DataSource><Username modified='1' type='string'><![CDATA[#NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_USER#]]></Username><Password modified='1' type='string'><![CDATA[#NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_PWD#]]></Password></Connection><Usage><WriteMode modified='1' type='int'><![CDATA[0]]></WriteMode><GenerateSQL modified='1' type='bool'><![CDATA[0]]></GenerateSQL><EnableQuotedIDs type='bool'><![CDATA[0]]></EnableQuotedIDs><SQL><InsertStatement collapsed='1' modified='1' type='string'><![CDATA[INSERT INTO 
+#NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_INDB#.NEINBD00W
+(
+PHONE_TYPE_ID
+,BATCH_KEY_ID
+,ACCT_NBR
+,BORROWER_POSITION_NUMBER
+,PHONE_TYPE
+,PHONE_NUMBER_RAW
+,MOBILE_PH_IND
+,AUTHORIZED_TO_CONTACT
+,DECISION
+,DECISION_ACT_STS
+,DECISION_ACT_DTTM
+) 
+VALUES
+(
+ORCHESTRATE.PHONE_TYPE_ID
+,ORCHESTRATE.BATCH_KEY_ID
+,ORCHESTRATE.ACCT_NBR
+,ORCHESTRATE.BORROWER_POSITION_NUMBER
+,ORCHESTRATE.PHONE_TYPE
+,ORCHESTRATE.PHONE_NUMBER_RAW
+,ORCHESTRATE.MOBILE_PH_IND
+,ORCHESTRATE.AUTHORIZED_TO_CONTACT
+,ORCHESTRATE.DECISION
+,''
+,''
+)]]><Tables collapsed='1'><Table type='string'><![CDATA[#NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_INDB#.NEINBD00W]]></Table></Tables><Parameters collapsed='1'><Parameter type='string'><![CDATA[PHONE_TYPE_ID,PHONE_TYPE_ID,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[BATCH_KEY_ID,BATCH_KEY_ID,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[ACCT_NBR,ACCT_NBR,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[BORROWER_POSITION_NUMBER,BORROWER_POSITION_NUMBER,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[PHONE_TYPE,PHONE_TYPE,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[PHONE_NUMBER_RAW,PHONE_NUMBER_RAW,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[MOBILE_PH_IND,MOBILE_PH_IND,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[AUTHORIZED_TO_CONTACT,AUTHORIZED_TO_CONTACT,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[DECISION,DECISION,NEINBD00W]]></Parameter></Parameters></InsertStatement></SQL><TableAction collapsed='1' type='int'><![CDATA[0]]></TableAction><Transaction><RecordCount modified='1' type='int'><![CDATA[0]]></RecordCount></Transaction><Session><IsolationLevel type='int'><![CDATA[1]]></IsolationLevel><AutocommitMode type='int'><![CDATA[0]]></AutocommitMode><ArraySize type='int'><![CDATA[2000]]></ArraySize><SchemaReconciliation><FailOnSizeMismatch modified='1' type='bool'><![CDATA[0]]></FailOnSizeMismatch><FailOnTypeMismatch modified='1' type='bool'><![CDATA[0]]></FailOnTypeMismatch><FailOnCodePageMismatch type='bool'><![CDATA[0]]></FailOnCodePageMismatch><DropUnmatchedFields type='bool'><![CDATA[1]]></DropUnmatchedFields></SchemaReconciliation><CodePage collapsed='1' type='int'><![CDATA[0]]></CodePage><FailOnRowErrorPX type='bool'><![CDATA[1]]></FailOnRowErrorPX></Session><Logging><LogColumnValues collapsed='1' type='bool'><![CDATA[0]]></LogColumnValues></Logging><BeforeAfter collapsed='1' type='bool'><![CDATA[0]]></BeforeAfter></Usage></Properties >
+=+=+=+=
+      END DSSUBRECORD
+      NextRecordID "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "V0S40P1"
+      OLEType "CCustomInput"
+      Readonly "0"
+      Name "lnk_lsams_dscn_extrct"
+      Partner "V0S37|V0S37P2"
+      LinkType "1"
+      ConditionNotMet "fail"
+      LookupFail "fail"
+      Properties "CCustomProperty"
+      BEGIN DSSUBRECORD
+         Name "VariantName"
+         Value "3.5"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "VariantLibrary"
+         Value "ccodbc"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "VariantVersion"
+         Value "1.0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectFromLink"
+         Value "-1"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectThreshold"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectNumber"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "RejectUsesPercentage"
+         Value "false"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Name "ConnectorName"
+         Value "ODBCConnector"
+      END DSSUBRECORD
+      MetaBag "CMetaProperty"
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "RTColumnProp"
+         Value "0"
+      END DSSUBRECORD
+      BEGIN DSSUBRECORD
+         Owner "APT"
+         Name "SchemaFormat"
+      END DSSUBRECORD
+      TransactionSize "0"
+      TXNBehaviour "0"
+      EnableTxGroup "0"
+      LinkMinimised "0"
+   END DSRECORD
+END DSJOB
+BEGIN DSEXECJOB
+   Identifier "LOAD_LSAMS_DCSN_NEINBD00W"
+   DateModified "1899-12-30"
+   TimeModified "00.00.01"
+   BEGIN DSRECORD
+      Identifier "LOAD_LSAMS_DCSN_NEINBD00W"
+      F1 "JOB"
+      F3 "9.1///55/C"
+      F5 "NEUSTAR_PARAM\VNEUSTAR_PARAM.$NEUSTAR_INBOUND_PATH\VNEUSTAR_PARAM.$NEUSTAR_NZ_DATASOURCE\VNEUSTAR_PARAM.$NEUSTAR_NZ_PWD\VNEUSTAR_PARAM.$NEUSTAR_NZ_SERVER\VNEUSTAR_PARAM.$NEUSTAR_NZ_USER\VNEUSTAR_PARAM.$NEUSTAR_OUTBOUND_PATH\VNEUSTAR_PARAM.$NEUSTAR_SQL_PWD\VNEUSTAR_PARAM.$NEUSTAR_SQL_USER\VNEUSTAR_PARAM.$NEUSTAR_SQL_SERVER\VNEUSTAR_PARAM.$NEUSTAR_WORK_PATH\VNEUSTAR_PARAM.$NEUSTAR_SQL_DB\VNEUSTAR_PARAM.$NEUSTAR_CUST_MSTR_DB_REF\VNEUSTAR_PARAM.NEUSTAR_SCRIPT_PATH\VNEUSTAR_PARAM.NEUSTAR_ADD_FILE_PATH\VNEUSTAR_PARAM.NEUSTAR_DEL_FILE_PATH\VNEUSTAR_PARAM.NEUSTAR_PCN_FILE_PATH\VNEUSTAR_PARAM.NEUSTAR_ARCHV_PATH\VNEUSTAR_PARAM.$EMAIL_SERVER_NAME\VNEUSTAR_PARAM.$EMAIL_ADDRESS_FROM\VNEUSTAR_PARAM.$EMAIL_ADDRESS_TO\VNEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_SERVER\VNEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_USER\VNEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_PWD\VNEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_INDB\VNEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_OUTDB"
+      F6 "NEUSTAR_PARAM parameters\VNEUSTAR_INBOUND_PATH\VNEUSTAR_NZ_DATASOURCE\VNEUSTAR_NZ_PWD\VNEUSTAR_NZ_SERVER\VNEUSTAR_NZ_USER\VNEUSTAR_OUTBOUND_PATH\VNEUSTAR_SQL_PWD\VNEUSTAR_SQL_USER\VNEUSTAR_SQL_SERVER\VNEUSTAR_WORK_PATH\VNEUSTAR_SQL_DB\VNEUSTAR_CUST_MSTR_DB_REF\VNEUSTAR_SCRIPT_PATH\VNEUSTAR_ADD_FILE_PATH\VNEUSTAR_DEL_FILE_PATH\VNEUSTAR_PCN_FILE_PATH\VNEUSTAR_ARCHV_PATH\VEMAIL_SERVER_NAME\VEMAIL_ADDRESS_FROM\VEMAIL_ADDRESS_TO\VNEUSTAR_LSAMS_SQL_SERVER\VNEUSTAR_LSAMS_SQL_USER\VNEUSTAR_LSAMS_SQL_PWD\VNEUSTAR_LSAMS_SQL_DB\VNEUSTAR_LSAMS_SQL_OUTDB"
+      F7 "(As pre-defined)\V$PROJDEF\V$PROJDEF\V{iisenc}eHG47YUwCsilbsYLdMUwUw==\V$PROJDEF\V$PROJDEF\V$PROJDEF\V{iisenc}eHG47YUwCsilbsYLdMUwUw==\V$PROJDEF\V$PROJDEF\V$PROJDEF\V$PROJDEF\V$PROJDEF\V/opt/code/projects/dwdg_netezza/Neustar/scripts\V/data/projects/dwdg_netezza/Neustar/Inbound/ADD\V/data/projects/dwdg_netezza/Neustar/Inbound/DEL\V/data/projects/dwdg_netezza/Neustar/Inbound/Change\V/data/projects/dwdg_netezza/Neustar/Inbound/Archive\V$PROJDEF\V$PROJDEF\Varchanaa.n@nationstarmail.com\VISERVDEV_AS400\Vsqllnk\VUserlnksql1\VLSAMSRECV\VRCUSTOMQA"
+      F9 "13\V0\V0\V1\V0\V0\V0\V1\V0\V0\V0\V0\V0\V0\V0\V0\V0\V0\V0\V0\V0\V0\V0\V0\V0\V0"
+      F10 "V0"
+      F11 "Extract data for LSAMS"
+      F12 "Job extracts data for LSAMS from CUST_ACCT_PH_NBR_DCSN"
+      F15 "ODBCConnectorPX\VPxCopy"
+      F18 "(As pre-defined)\V$PROJDEF\V$PROJDEF\V{iisenc}eHG47YUwCsilbsYLdMUwUw==\V$PROJDEF\V$PROJDEF\V$PROJDEF\V{iisenc}eHG47YUwCsilbsYLdMUwUw==\V$PROJDEF\V$PROJDEF\V$PROJDEF\V$PROJDEF\V$PROJDEF\V/opt/code/projects/dwdg_netezza/Neustar/scripts\V/data/projects/dwdg_netezza/Neustar/Inbound/ADD\V/data/projects/dwdg_netezza/Neustar/Inbound/DEL\V/data/projects/dwdg_netezza/Neustar/Inbound/Change\V/data/projects/dwdg_netezza/Neustar/Inbound/Archive\V$PROJDEF\V$PROJDEF\Varchanaa.n@nationstarmail.com\VISERVDEV_AS400\Vsqllnk\VUserlnksql1\VLSAMSRECV\VRCUSTOMQA"
+      F21 "1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1\V1"
+      F24 ",,,,"
+      F28 "\\Jobs\\NEUSTAR\\INBOUND"
+      F29 "0"
+      F30 "0"
+      F31 "2016-12-14 04:28:53"
+      F32 "3"
+      F34 "0\V1\VLINUX\V0\V\V#DSProjectARTOptions#\V1252\V\V\V\V\V\V0\V0"
+      F35 "ODBC_LSAMS_DCSN\VCPY_LSAMS_DSCN\VODBC_LSAMS_NEINBD00W"
+      F36 "vrisdev02.chec.local"
+      F37 "ORIGINATIONS_DEV"
+      F38 "0"
+      F39 "LOAD_LSAMS_DCSN_NEINBD00W.ODBC_LSAMS_DCSN\VLOAD_LSAMS_DCSN_NEINBD00W.CPY_LSAMS_DSCN\VLOAD_LSAMS_DCSN_NEINBD00W.ODBC_LSAMS_NEINBD00W"
+      F41 "0"
+      F43 ",,,,"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "LOAD_LSAMS_DCSN_NEINBD00W.CPY_LSAMS_DSCN"
+      F1 "STAGE"
+      F2 "CUSTOM"
+      F3 "9.1///55/C"
+      F4 "LOAD_LSAMS_DCSN_NEINBD00W"
+      F9 "LOAD_LSAMS_DCSN_NEINBD00W.ODBC_LSAMS_DCSN.lnk_out_lsams_dscn"
+      F10 "LOAD_LSAMS_DCSN_NEINBD00W.CPY_LSAMS_DSCN.lnk_lsams_dscn_extrct"
+      F13 "force"
+      F14 " "
+      F16 "PxCopy"
+      F23 "5"
+      F31 "LOAD_LSAMS_DCSN_NEINBD00W.CPY_LSAMS_DSCN"
+      F32 "-1.-1"
+      F40 "0"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "LOAD_LSAMS_DCSN_NEINBD00W.CPY_LSAMS_DSCN.lnk_lsams_dscn_extrct"
+      F1 "OUTPIN"
+      F3 "9.1///55/C"
+      F5 "9"
+      F16 "LOAD_LSAMS_DCSN_NEINBD00W.CPY_LSAMS_DSCN\VLOAD_LSAMS_DCSN_NEINBD00W.ODBC_LSAMS_NEINBD00W"
+      F21 "PHONE_TYPE_ID\VBATCH_KEY_ID\VACCT_NBR\VBORROWER_POSITION_NUMBER\VPHONE_TYPE\VPHONE_NUMBER_RAW\VMOBILE_PH_IND\VAUTHORIZED_TO_CONTACT\VDECISION"
+      F22 "0\V0\V0\V0\V0\V0\V0\V0\V0"
+      F25 "-5\V-5\V12\V4\V12\V12\V12\V12\V12"
+      F26 "10\V32\V16\V0\V32\V32\V1\V8\V32"
+      F27 "0\V0\V0\V0\V0\V0\V0\V0\V0"
+      F28 "0\V0\V0\V0\V0\V0\V0\V0\V0"
+      F39 "lnk_lsams_dscn_extrct"
+      F40 "0\V0\V0\V1\V1\V1\V1\V1\V1"
+      F41 "lnk_out_lsams_dscn.PHONE_TYPE_ID\Vlnk_out_lsams_dscn.BATCH_KEY_ID\Vlnk_out_lsams_dscn.ACCT_NBR\Vlnk_out_lsams_dscn.BORROWER_POSITION_NUMBER\Vlnk_out_lsams_dscn.PHONE_TYPE\Vlnk_out_lsams_dscn.PHONE_NUMBER_RAW\Vlnk_out_lsams_dscn.MOBILE_PH_IND\Vlnk_out_lsams_dscn.AUTHORIZED_TO_CONTACT\Vlnk_out_lsams_dscn.DECISION"
+      F50 "\V"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "LOAD_LSAMS_DCSN_NEINBD00W.ODBC_LSAMS_DCSN"
+      F1 "STAGE"
+      F2 "CUSTOM"
+      F3 "9.1///55/C"
+      F4 "LOAD_LSAMS_DCSN_NEINBD00W"
+      F10 "LOAD_LSAMS_DCSN_NEINBD00W.ODBC_LSAMS_DCSN.lnk_out_lsams_dscn"
+      F13 "VariantName\VVariantLibrary\VVariantVersion\VSupportedVariants\VSupportedVariantsLibraries\VSupportedVariantsVersions\VOrientation\VRejectFromLink\VRejectThreshold\VRejectNumber\VRejectUsesPercentage\VConnectorName\VEngine\VContext\VConnectionString\VUsername\VPassword\VXMLProperties"
+      F14 "3.5\Vccodbc\V1.0\VV1;3.5::ccodbc\Vccodbc\V1.0\Vlink\V-1\V0\V0\Vfalse\VODBCConnector\VEE\Vsource\V/Connection/DataSource\V/Connection/Username\V/Connection/Password\V<?xml version='1.0' encoding='UTF-16'?><Properties version='1.1'><Common><Context type='int'>1</Context><Variant type='string'>3.5</Variant><DescriptorVersion type='string'>1.0</DescriptorVersion><PartitionType type='int'>-1</PartitionType><RCP type='int'>0</RCP></Common><Connection><DataSource modified='1' type='string'><![CDATA[#NEUSTAR_PARAM.$NEUSTAR_SQL_SERVER#]]></DataSource><Username modified='1' type='string'><![CDATA[#NEUSTAR_PARAM.$NEUSTAR_SQL_USER#]]></Username><Password modified='1' type='string'><![CDATA[#NEUSTAR_PARAM.$NEUSTAR_SQL_PWD#]]></Password></Connection><Usage><GenerateSQL modified='1' type='bool'><![CDATA[0]]></GenerateSQL><EnableQuotedIDs type='bool'><![CDATA[0]]></EnableQuotedIDs><SQL><SelectStatement modified='1' type='string'><![CDATA[SELECT\(D)\(A)\(9) CAST(CUST_ACCT_PH_TYPE_ID AS BIGINT) AS PHONE_TYPE_ID\(D)\(A)\(9),CAST(BAT_EXEC_KEY_ID AS BIGINT) AS BATCH_KEY_ID\(D)\(A)\(9),CAST(LTRIM(RTRIM(ACCT_NBR)) AS VARCHAR(16)) AS ACCT_NBR\(D)\(A)\(9),CAST(BORR_PSTN_NBR AS INTEGER) AS BORROWER_POSITION_NUMBER\(D)\(A)\(9),CAST(LTRIM(RTRIM(PH_TYPE_CD)) AS VARCHAR(32)) AS PHONE_TYPE\(D)\(A)\(9),CAST(LTRIM(RTRIM(PH_NBR_RAW_FRMT)) AS VARCHAR(32)) AS PHONE_NUMBER_RAW\(D)\(A)\(9),CAST(LTRIM(RTRIM(DCSN_MBL_PH_IND)) AS VARCHAR(1)) AS MOBILE_PH_IND\(D)\(A)\(9),CAST(LTRIM(RTRIM(DCSN_AUTH_TO_CNTCT)) AS VARCHAR(8)) AS AUTHORIZED_TO_CONTACT\(D)\(A)\(9),CASE WHEN CAST(LTRIM(RTRIM(DCSN)) AS VARCHAR(32))='D-INVLD_PH_NBR' THEN 'D' ELSE DCSN END AS DECISION\(D)\(A)FROM\(D)\(A)\(9)#NEUSTAR_PARAM.$NEUSTAR_SQL_DB#.XFER.CUST_ACCT_PH_NBR_DCSN\(D)\(A)WHERE\(D)\(A)\(9)UPPER(LTRIM(RTRIM(DCSN))) IN ('D','U','D-INVLD_PH_NBR')\(D)\(A)\(9)AND DCSN_ACTN_STS IS NULL AND DCSN_ACTN_DTTM IS NULL\(D)\(A);]]><ReadStatementFromFile type='bool'><![CDATA[0]]></ReadStatementFromFile><Tables collapsed='1'></Tables><Parameters collapsed='1'></Parameters><Columns collapsed='1'></Columns></SelectStatement><EnablePartitioning collapsed='1' type='bool'><![CDATA[0]]></EnablePartitioning></SQL><Transaction><RecordCount type='int'><![CDATA[2000]]></RecordCount><EndOfWave collapsed='1' type='int'><![CDATA[0]]></EndOfWave></Transaction><Session><IsolationLevel type='int'><![CDATA[1]]></IsolationLevel><AutocommitMode type='int'><![CDATA[0]]></AutocommitMode><ArraySize type='int'><![CDATA[2000]]></ArraySize><SchemaReconciliation><FailOnSizeMismatch modified='1' type='bool'><![CDATA[0]]></FailOnSizeMismatch><FailOnTypeMismatch modified='1' type='bool'><![CDATA[0]]></FailOnTypeMismatch><FailOnCodePageMismatch type='bool'><![CDATA[0]]></FailOnCodePageMismatch></SchemaReconciliation><PassLobLocator collapsed='1' type='bool'><![CDATA[0]]></PassLobLocator><CodePage collapsed='1' type='int'><![CDATA[0]]></CodePage></Session><BeforeAfter collapsed='1' type='bool'><![CDATA[0]]></BeforeAfter><LimitRows collapsed='1' type='bool'><![CDATA[0]]></LimitRows></Usage></Properties >"
+      F16 "ODBCConnectorPX"
+      F23 "0\V0\V0\V0\V0\V0\V0\V2\V2\V2\V11\V0\V0\V0\V0\V0\V1\V0"
+      F31 "LOAD_LSAMS_DCSN_NEINBD00W.ODBC_LSAMS_DCSN"
+      F32 "-1.-1"
+      F40 "1"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "LOAD_LSAMS_DCSN_NEINBD00W.ODBC_LSAMS_DCSN.lnk_out_lsams_dscn"
+      F1 "OUTPIN"
+      F3 "9.1///55/C"
+      F5 "9"
+      F16 "LOAD_LSAMS_DCSN_NEINBD00W.ODBC_LSAMS_DCSN\VLOAD_LSAMS_DCSN_NEINBD00W.CPY_LSAMS_DSCN"
+      F21 "PHONE_TYPE_ID\VBATCH_KEY_ID\VACCT_NBR\VBORROWER_POSITION_NUMBER\VPHONE_TYPE\VPHONE_NUMBER_RAW\VMOBILE_PH_IND\VAUTHORIZED_TO_CONTACT\VDECISION"
+      F22 "0\V0\V0\V0\V0\V0\V0\V0\V0"
+      F25 "-5\V-5\V12\V4\V12\V12\V12\V12\V12"
+      F26 "10\V32\V16\V0\V32\V32\V1\V8\V32"
+      F27 "0\V0\V0\V0\V0\V0\V0\V0\V0"
+      F28 "0\V0\V0\V0\V0\V0\V0\V0\V0"
+      F39 "lnk_out_lsams_dscn"
+      F40 "0\V0\V0\V1\V1\V1\V1\V1\V1"
+      F50 "\V"
+   END DSRECORD
+   BEGIN DSRECORD
+      Identifier "LOAD_LSAMS_DCSN_NEINBD00W.ODBC_LSAMS_NEINBD00W"
+      F1 "STAGE"
+      F2 "CUSTOM"
+      F3 "9.1///55/C"
+      F4 "LOAD_LSAMS_DCSN_NEINBD00W"
+      F9 "LOAD_LSAMS_DCSN_NEINBD00W.CPY_LSAMS_DSCN.lnk_lsams_dscn_extrct"
+      F13 "VariantName\VVariantLibrary\VVariantVersion\VSupportedVariants\VSupportedVariantsLibraries\VSupportedVariantsVersions\VOrientation\VRejectFromLink\VRejectThreshold\VRejectNumber\VRejectUsesPercentage\VConnectorName\VEngine\VContext\VConnectionString\VUsername\VPassword\VXMLProperties"
+      F14 "3.5\Vccodbc\V1.0\VV1;3.5::ccodbc\Vccodbc\V1.0\Vlink\V-1\V0\V0\Vfalse\VODBCConnector\VEE\Vtarget\V/Connection/DataSource\V/Connection/Username\V/Connection/Password\V<?xml version='1.0' encoding='UTF-16'?><Properties version='1.1'><Common><Context type='int'>2</Context><Variant type='string'>3.5</Variant><DescriptorVersion type='string'>1.0</DescriptorVersion><PartitionType type='int'>-1</PartitionType><RCP type='int'>0</RCP></Common><Connection><DataSource modified='1' type='string'><![CDATA[#NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_SERVER#]]></DataSource><Username modified='1' type='string'><![CDATA[#NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_USER#]]></Username><Password modified='1' type='string'><![CDATA[#NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_PWD#]]></Password></Connection><Usage><WriteMode modified='1' type='int'><![CDATA[0]]></WriteMode><GenerateSQL modified='1' type='bool'><![CDATA[0]]></GenerateSQL><EnableQuotedIDs type='bool'><![CDATA[0]]></EnableQuotedIDs><SQL><InsertStatement collapsed='1' modified='1' type='string'><![CDATA[INSERT INTO \(D)\(A)#NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_INDB#.NEINBD00W\(D)\(A)(\(D)\(A)PHONE_TYPE_ID\(D)\(A),BATCH_KEY_ID\(D)\(A),ACCT_NBR\(D)\(A),BORROWER_POSITION_NUMBER\(D)\(A),PHONE_TYPE\(D)\(A),PHONE_NUMBER_RAW\(D)\(A),MOBILE_PH_IND\(D)\(A),AUTHORIZED_TO_CONTACT\(D)\(A),DECISION\(D)\(A),DECISION_ACT_STS\(D)\(A),DECISION_ACT_DTTM\(D)\(A)) \(D)\(A)VALUES\(D)\(A)(\(D)\(A)ORCHESTRATE.PHONE_TYPE_ID\(D)\(A),ORCHESTRATE.BATCH_KEY_ID\(D)\(A),ORCHESTRATE.ACCT_NBR\(D)\(A),ORCHESTRATE.BORROWER_POSITION_NUMBER\(D)\(A),ORCHESTRATE.PHONE_TYPE\(D)\(A),ORCHESTRATE.PHONE_NUMBER_RAW\(D)\(A),ORCHESTRATE.MOBILE_PH_IND\(D)\(A),ORCHESTRATE.AUTHORIZED_TO_CONTACT\(D)\(A),ORCHESTRATE.DECISION\(D)\(A),''\(D)\(A),''\(D)\(A))]]><Tables collapsed='1'><Table type='string'><![CDATA[#NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_INDB#.NEINBD00W]]></Table></Tables><Parameters collapsed='1'><Parameter type='string'><![CDATA[PHONE_TYPE_ID,PHONE_TYPE_ID,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[BATCH_KEY_ID,BATCH_KEY_ID,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[ACCT_NBR,ACCT_NBR,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[BORROWER_POSITION_NUMBER,BORROWER_POSITION_NUMBER,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[PHONE_TYPE,PHONE_TYPE,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[PHONE_NUMBER_RAW,PHONE_NUMBER_RAW,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[MOBILE_PH_IND,MOBILE_PH_IND,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[AUTHORIZED_TO_CONTACT,AUTHORIZED_TO_CONTACT,NEINBD00W]]></Parameter><Parameter type='string'><![CDATA[DECISION,DECISION,NEINBD00W]]></Parameter></Parameters></InsertStatement></SQL><TableAction collapsed='1' type='int'><![CDATA[0]]></TableAction><Transaction><RecordCount modified='1' type='int'><![CDATA[0]]></RecordCount></Transaction><Session><IsolationLevel type='int'><![CDATA[1]]></IsolationLevel><AutocommitMode type='int'><![CDATA[0]]></AutocommitMode><ArraySize type='int'><![CDATA[2000]]></ArraySize><SchemaReconciliation><FailOnSizeMismatch modified='1' type='bool'><![CDATA[0]]></FailOnSizeMismatch><FailOnTypeMismatch modified='1' type='bool'><![CDATA[0]]></FailOnTypeMismatch><FailOnCodePageMismatch type='bool'><![CDATA[0]]></FailOnCodePageMismatch><DropUnmatchedFields type='bool'><![CDATA[1]]></DropUnmatchedFields></SchemaReconciliation><CodePage collapsed='1' type='int'><![CDATA[0]]></CodePage><FailOnRowErrorPX type='bool'><![CDATA[1]]></FailOnRowErrorPX></Session><Logging><LogColumnValues collapsed='1' type='bool'><![CDATA[0]]></LogColumnValues></Logging><BeforeAfter collapsed='1' type='bool'><![CDATA[0]]></BeforeAfter></Usage></Properties >"
+      F16 "ODBCConnectorPX"
+      F23 "0\V0\V0\V0\V0\V0\V0\V2\V2\V2\V11\V0\V0\V0\V0\V0\V1\V0"
+      F31 "LOAD_LSAMS_DCSN_NEINBD00W.ODBC_LSAMS_NEINBD00W"
+      F32 "-1.-1"
+      F40 "1"
+   END DSRECORD
+   COMMENT No program sources in executable job
+   COMMENT No program binaries in executable job
+   BEGIN DSSCRIPT
+      Identifier "OshExecuter.sh"
+      TERMINATOR =+=+=+=
+#!/bin/sh
+# Shell script for Datastage to execute an osh script, generated at 2016-12-14 04:28:53
+# Compiler runtime stamp 9.1///55/C
+#
+# Parameters:
+# $1 - Run indicator: R=normal run, P=performance wrappered run
+# $2 - Environment variable file name - dummy
+# $3... - Osh / performance checker command line arguments
+RunIndicator=$1
+DummyEnv=$2
+shift
+shift
+if test ! -x "$APT_ORCHHOME/bin/osh"
+  then echo '##OSHRETVAL NOOSH'
+  exit 1
+fi
+# Test for resource estimation option.
+if test $RunIndicator = P
+  then $APT_ORCHHOME/bin/orchresest "$@" 2>&1 &
+  else $APT_ORCHHOME/bin/osh "$@" 2>&1 &
+fi
+oshpid=$!
+# Write the pid of the conductor process
+echo '##OSHPID' $oshpid
+wait $oshpid
+oshcode=$?
+oshdir=`dirname $0`
+# Write the terminating string
+echo '##OSHRETVAL' $oshcode > $oshdir/../RT_SCTEMP/$oshpid.retval
+echo '##OSHRETVAL' $oshcode
+# end of script
+=+=+=+=
+   END DSSCRIPT
+   BEGIN DSSCRIPT
+      Identifier "OshScript.osh"
+      TERMINATOR =+=+=+=
+# OSH / orchestrate script for Job LOAD_LSAMS_DCSN_NEINBD00W compiled at 04:28:53 14 DEC 2016
+#################################################################
+#### STAGE: ODBC_LSAMS_DCSN
+## Operator
+pxbridge
+## Operator options
+-Orientation link
+-XMLProperties '<?xml version=\\'1.0\\' encoding=\\'UTF-16\\'?><Properties version=\\'1.1\\'><Common><Context type=\\'int\\'>1</Context><Variant type=\\'string\\'>3.5</Variant><DescriptorVersion type=\\'string\\'>1.0</DescriptorVersion><PartitionType type=\\'int\\'>-1</PartitionType><RCP type=\\'int\\'>0</RCP></Common><Connection><DataSource modified=\\'1\\' type=\\'string\\'><![CDATA[[&"NEUSTAR_PARAM.$NEUSTAR_SQL_SERVER"]]]></DataSource><Username modified=\\'1\\' type=\\'string\\'><![CDATA[[&"NEUSTAR_PARAM.$NEUSTAR_SQL_USER"]]]></Username><Password modified=\\'1\\' type=\\'string\\'><![CDATA[[&"NEUSTAR_PARAM.$NEUSTAR_SQL_PWD"]]]></Password></Connection><Usage><GenerateSQL modified=\\'1\\' type=\\'bool\\'><![CDATA[0]]></GenerateSQL><EnableQuotedIDs type=\\'bool\\'><![CDATA[0]]></EnableQuotedIDs><SQL><SelectStatement modified=\\'1\\' type=\\'string\\'><![CDATA[SELECT
+	 CAST(CUST_ACCT_PH_TYPE_ID AS BIGINT) AS PHONE_TYPE_ID
+	,CAST(BAT_EXEC_KEY_ID AS BIGINT) AS BATCH_KEY_ID
+	,CAST(LTRIM(RTRIM(ACCT_NBR)) AS VARCHAR(16)) AS ACCT_NBR
+	,CAST(BORR_PSTN_NBR AS INTEGER) AS BORROWER_POSITION_NUMBER
+	,CAST(LTRIM(RTRIM(PH_TYPE_CD)) AS VARCHAR(32)) AS PHONE_TYPE
+	,CAST(LTRIM(RTRIM(PH_NBR_RAW_FRMT)) AS VARCHAR(32)) AS PHONE_NUMBER_RAW
+	,CAST(LTRIM(RTRIM(DCSN_MBL_PH_IND)) AS VARCHAR(1)) AS MOBILE_PH_IND
+	,CAST(LTRIM(RTRIM(DCSN_AUTH_TO_CNTCT)) AS VARCHAR(8)) AS AUTHORIZED_TO_CONTACT
+	,CASE WHEN CAST(LTRIM(RTRIM(DCSN)) AS VARCHAR(32))=\\'D-INVLD_PH_NBR\\' THEN \\'D\\' ELSE DCSN END AS DECISION
+FROM
+	[&"NEUSTAR_PARAM.$NEUSTAR_SQL_DB"].XFER.CUST_ACCT_PH_NBR_DCSN
+WHERE
+	UPPER(LTRIM(RTRIM(DCSN))) IN (\\'D\\',\\'U\\',\\'D-INVLD_PH_NBR\\')
+	AND DCSN_ACTN_STS IS NULL AND DCSN_ACTN_DTTM IS NULL
+;]]><ReadStatementFromFile type=\\'bool\\'><![CDATA[0]]></ReadStatementFromFile><Tables collapsed=\\'1\\'></Tables><Parameters collapsed=\\'1\\'></Parameters><Columns collapsed=\\'1\\'></Columns></SelectStatement><EnablePartitioning collapsed=\\'1\\' type=\\'bool\\'><![CDATA[0]]></EnablePartitioning></SQL><Transaction><RecordCount type=\\'int\\'><![CDATA[2000]]></RecordCount><EndOfWave collapsed=\\'1\\' type=\\'int\\'><![CDATA[0]]></EndOfWave></Transaction><Session><IsolationLevel type=\\'int\\'><![CDATA[1]]></IsolationLevel><AutocommitMode type=\\'int\\'><![CDATA[0]]></AutocommitMode><ArraySize type=\\'int\\'><![CDATA[2000]]></ArraySize><SchemaReconciliation><FailOnSizeMismatch modified=\\'1\\' type=\\'bool\\'><![CDATA[0]]></FailOnSizeMismatch><FailOnTypeMismatch modified=\\'1\\' type=\\'bool\\'><![CDATA[0]]></FailOnTypeMismatch><FailOnCodePageMismatch type=\\'bool\\'><![CDATA[0]]></FailOnCodePageMismatch></SchemaReconciliation><PassLobLocator collapsed=\\'1\\' type=\\'bool\\'><![CDATA[0]]></PassLobLocator><CodePage collapsed=\\'1\\' type=\\'int\\'><![CDATA[0]]></CodePage></Session><BeforeAfter collapsed=\\'1\\' type=\\'bool\\'><![CDATA[0]]></BeforeAfter><LimitRows collapsed=\\'1\\' type=\\'bool\\'><![CDATA[0]]></LimitRows></Usage></Properties >'
+-connector '{
+   variant=\\'3.5\\', 
+   library=ccodbc, 
+   version=1.0, 
+   variantlist=\\'V1;3.5::ccodbc\\', 
+   versionlist=\\'1.0\\', 
+   name=ODBCConnector
+}'
+-source 0 '{
+      DSSQLType={PHONE_TYPE_ID=-5, BATCH_KEY_ID=-5, ACCT_NBR=12, BORROWER_POSITION_NUMBER=4, PHONE_TYPE=12, PHONE_NUMBER_RAW=12, MOBILE_PH_IND=12, AUTHORIZED_TO_CONTACT=12, DECISION=12}, 
+      DSSQLPrecision={PHONE_TYPE_ID=10, BATCH_KEY_ID=32, ACCT_NBR=16, PHONE_TYPE=32, PHONE_NUMBER_RAW=32, MOBILE_PH_IND=1, AUTHORIZED_TO_CONTACT=8, DECISION=32}, 
+      DSSchema=\\'record
+         (
+           PHONE_TYPE_ID\\:int64\\;
+           BATCH_KEY_ID\\:int64\\;
+           ACCT_NBR\\:string\\[max\\=16\\]\\;
+           BORROWER_POSITION_NUMBER\\:nullable int32\\;
+           PHONE_TYPE\\:nullable string\\[max\\=32\\]\\;
+           PHONE_NUMBER_RAW\\:nullable string\\[max\\=32\\]\\;
+           MOBILE_PH_IND\\:nullable string\\[max\\=1\\]\\;
+           AUTHORIZED_TO_CONTACT\\:nullable string\\[max\\=8\\]\\;
+           DECISION\\:nullable string\\[max\\=32\\]\\;
+         )\\'
+}'
+   
+## General options
+[ident('ODBC_LSAMS_DCSN'); jobmon_ident('ODBC_LSAMS_DCSN')]
+## Outputs
+0> [modify (
+  PHONE_TYPE_ID:not_nullable int64=PHONE_TYPE_ID;
+  BATCH_KEY_ID:not_nullable int64=BATCH_KEY_ID;
+  ACCT_NBR:not_nullable string[max=16]=ACCT_NBR;
+  BORROWER_POSITION_NUMBER:nullable int32=BORROWER_POSITION_NUMBER;
+  PHONE_TYPE:nullable string[max=32]=PHONE_TYPE;
+  PHONE_NUMBER_RAW:nullable string[max=32]=PHONE_NUMBER_RAW;
+  MOBILE_PH_IND:nullable string[max=1]=MOBILE_PH_IND;
+  AUTHORIZED_TO_CONTACT:nullable string[max=8]=AUTHORIZED_TO_CONTACT;
+  DECISION:nullable string[max=32]=DECISION;
+keep
+  PHONE_TYPE_ID,BATCH_KEY_ID,ACCT_NBR,BORROWER_POSITION_NUMBER,
+  PHONE_TYPE,PHONE_NUMBER_RAW,MOBILE_PH_IND,AUTHORIZED_TO_CONTACT,
+  DECISION;
+)] 'ODBC_LSAMS_DCSN:lnk_out_lsams_dscn.v'
+;
+#################################################################
+#### STAGE: CPY_LSAMS_DSCN
+## Operator
+copy
+## General options
+[ident('CPY_LSAMS_DSCN'); jobmon_ident('CPY_LSAMS_DSCN')]
+## Inputs
+0< [] 'ODBC_LSAMS_DCSN:lnk_out_lsams_dscn.v'
+## Outputs
+0> [modify (
+keep
+  PHONE_TYPE_ID,BATCH_KEY_ID,ACCT_NBR,BORROWER_POSITION_NUMBER,
+  PHONE_TYPE,PHONE_NUMBER_RAW,MOBILE_PH_IND,AUTHORIZED_TO_CONTACT,
+  DECISION;
+)] 'CPY_LSAMS_DSCN:lnk_lsams_dscn_extrct.v'
+;
+#################################################################
+#### STAGE: ODBC_LSAMS_NEINBD00W
+## Operator
+pxbridge
+## Operator options
+-Orientation link
+-XMLProperties '<?xml version=\\'1.0\\' encoding=\\'UTF-16\\'?><Properties version=\\'1.1\\'><Common><Context type=\\'int\\'>2</Context><Variant type=\\'string\\'>3.5</Variant><DescriptorVersion type=\\'string\\'>1.0</DescriptorVersion><PartitionType type=\\'int\\'>-1</PartitionType><RCP type=\\'int\\'>0</RCP></Common><Connection><DataSource modified=\\'1\\' type=\\'string\\'><![CDATA[[&"NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_SERVER"]]]></DataSource><Username modified=\\'1\\' type=\\'string\\'><![CDATA[[&"NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_USER"]]]></Username><Password modified=\\'1\\' type=\\'string\\'><![CDATA[[&"NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_PWD"]]]></Password></Connection><Usage><WriteMode modified=\\'1\\' type=\\'int\\'><![CDATA[0]]></WriteMode><GenerateSQL modified=\\'1\\' type=\\'bool\\'><![CDATA[0]]></GenerateSQL><EnableQuotedIDs type=\\'bool\\'><![CDATA[0]]></EnableQuotedIDs><SQL><InsertStatement collapsed=\\'1\\' modified=\\'1\\' type=\\'string\\'><![CDATA[INSERT INTO 
+[&"NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_INDB"].NEINBD00W
+(
+PHONE_TYPE_ID
+,BATCH_KEY_ID
+,ACCT_NBR
+,BORROWER_POSITION_NUMBER
+,PHONE_TYPE
+,PHONE_NUMBER_RAW
+,MOBILE_PH_IND
+,AUTHORIZED_TO_CONTACT
+,DECISION
+,DECISION_ACT_STS
+,DECISION_ACT_DTTM
+) 
+VALUES
+(
+ORCHESTRATE.PHONE_TYPE_ID
+,ORCHESTRATE.BATCH_KEY_ID
+,ORCHESTRATE.ACCT_NBR
+,ORCHESTRATE.BORROWER_POSITION_NUMBER
+,ORCHESTRATE.PHONE_TYPE
+,ORCHESTRATE.PHONE_NUMBER_RAW
+,ORCHESTRATE.MOBILE_PH_IND
+,ORCHESTRATE.AUTHORIZED_TO_CONTACT
+,ORCHESTRATE.DECISION
+,\\'\\'
+,\\'\\'
+)]]><Tables collapsed=\\'1\\'><Table type=\\'string\\'><![CDATA[[&"NEUSTAR_PARAM.NEUSTAR_LSAMS_SQL_INDB"].NEINBD00W]]></Table></Tables><Parameters collapsed=\\'1\\'><Parameter type=\\'string\\'><![CDATA[PHONE_TYPE_ID,PHONE_TYPE_ID,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[BATCH_KEY_ID,BATCH_KEY_ID,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[ACCT_NBR,ACCT_NBR,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[BORROWER_POSITION_NUMBER,BORROWER_POSITION_NUMBER,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[PHONE_TYPE,PHONE_TYPE,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[PHONE_NUMBER_RAW,PHONE_NUMBER_RAW,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[MOBILE_PH_IND,MOBILE_PH_IND,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[AUTHORIZED_TO_CONTACT,AUTHORIZED_TO_CONTACT,NEINBD00W]]></Parameter><Parameter type=\\'string\\'><![CDATA[DECISION,DECISION,NEINBD00W]]></Parameter></Parameters></InsertStatement></SQL><TableAction collapsed=\\'1\\' type=\\'int\\'><![CDATA[0]]></TableAction><Transaction><RecordCount modified=\\'1\\' type=\\'int\\'><![CDATA[0]]></RecordCount></Transaction><Session><IsolationLevel type=\\'int\\'><![CDATA[1]]></IsolationLevel><AutocommitMode type=\\'int\\'><![CDATA[0]]></AutocommitMode><ArraySize type=\\'int\\'><![CDATA[2000]]></ArraySize><SchemaReconciliation><FailOnSizeMismatch modified=\\'1\\' type=\\'bool\\'><![CDATA[0]]></FailOnSizeMismatch><FailOnTypeMismatch modified=\\'1\\' type=\\'bool\\'><![CDATA[0]]></FailOnTypeMismatch><FailOnCodePageMismatch type=\\'bool\\'><![CDATA[0]]></FailOnCodePageMismatch><DropUnmatchedFields type=\\'bool\\'><![CDATA[1]]></DropUnmatchedFields></SchemaReconciliation><CodePage collapsed=\\'1\\' type=\\'int\\'><![CDATA[0]]></CodePage><FailOnRowErrorPX type=\\'bool\\'><![CDATA[1]]></FailOnRowErrorPX></Session><Logging><LogColumnValues collapsed=\\'1\\' type=\\'bool\\'><![CDATA[0]]></LogColumnValues></Logging><BeforeAfter collapsed=\\'1\\' type=\\'bool\\'><![CDATA[0]]></BeforeAfter></Usage></Properties >'
+-connector '{
+   variant=\\'3.5\\', 
+   library=ccodbc, 
+   version=1.0, 
+   variantlist=\\'V1;3.5::ccodbc\\', 
+   versionlist=\\'1.0\\', 
+   name=ODBCConnector
+}'
+-target 0 '{
+      DSSQLType={PHONE_TYPE_ID=-5, BATCH_KEY_ID=-5, ACCT_NBR=12, BORROWER_POSITION_NUMBER=4, PHONE_TYPE=12, PHONE_NUMBER_RAW=12, MOBILE_PH_IND=12, AUTHORIZED_TO_CONTACT=12, DECISION=12}, 
+      DSDerivation={PHONE_TYPE_ID=\\'lnk_out_lsams_dscn\\.PHONE_TYPE_ID\\', BATCH_KEY_ID=\\'lnk_out_lsams_dscn\\.BATCH_KEY_ID\\', ACCT_NBR=\\'lnk_out_lsams_dscn\\.ACCT_NBR\\', BORROWER_POSITION_NUMBER=\\'lnk_out_lsams_dscn\\.BORROWER_POSITION_NUMBER\\', PHONE_TYPE=\\'lnk_out_lsams_dscn\\.PHONE_TYPE\\', PHONE_NUMBER_RAW=\\'lnk_out_lsams_dscn\\.PHONE_NUMBER_RAW\\', MOBILE_PH_IND=\\'lnk_out_lsams_dscn\\.MOBILE_PH_IND\\', AUTHORIZED_TO_CONTACT=\\'lnk_out_lsams_dscn\\.AUTHORIZED_TO_CONTACT\\', DECISION=\\'lnk_out_lsams_dscn\\.DECISION\\'}, 
+      DSSQLPrecision={PHONE_TYPE_ID=10, BATCH_KEY_ID=32, ACCT_NBR=16, PHONE_TYPE=32, PHONE_NUMBER_RAW=32, MOBILE_PH_IND=1, AUTHORIZED_TO_CONTACT=8, DECISION=32}, 
+      DSSchema=\\'record
+         (
+           PHONE_TYPE_ID\\:int64\\;
+           BATCH_KEY_ID\\:int64\\;
+           ACCT_NBR\\:string\\[max\\=16\\]\\;
+           BORROWER_POSITION_NUMBER\\:nullable int32\\;
+           PHONE_TYPE\\:nullable string\\[max\\=32\\]\\;
+           PHONE_NUMBER_RAW\\:nullable string\\[max\\=32\\]\\;
+           MOBILE_PH_IND\\:nullable string\\[max\\=1\\]\\;
+           AUTHORIZED_TO_CONTACT\\:nullable string\\[max\\=8\\]\\;
+           DECISION\\:nullable string\\[max\\=32\\]\\;
+         )\\'
+}'
+   
+## General options
+[ident('ODBC_LSAMS_NEINBD00W'); jobmon_ident('ODBC_LSAMS_NEINBD00W')]
+## Inputs
+0< [] 'CPY_LSAMS_DSCN:lnk_lsams_dscn_extrct.v'
+;
+# End of OSH code
+=+=+=+=
+   END DSSCRIPT
+END DSEXECJOB
